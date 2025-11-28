@@ -1,7 +1,7 @@
 // 1193 분수찾기
 const fs = require('fs')
 const path = require('path')
-const filePath = path.join(__dirname, 'input.txt')
+const filePath = path.join(__dirname, '../input.txt')
 const input = fs.readFileSync(filePath).toString().trim()
 
 /*

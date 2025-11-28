@@ -1,52 +1,41 @@
-// 1193 분수찾기
+// 2501 약수 구하기
 const fs = require('fs')
 const path = require('path')
 const filePath = path.join(__dirname, 'input.txt')
-const input = fs.readFileSync(filePath).toString().trim()
 
-/*
-아이디어
-1-1. 1/x은 1,2,4,7,11,16...(등차수열) 에서 짝수번에 해당함
-1-2 x/1은 위 등차수열에서 홀수번에 해당함
+const input = fs.readFileSync(filePath).toString().trim().split(' ').map(Number)
 
+const [N, K] = input
+const firstList = []
+const secondList = []
+let answer
+//조건을 i<=N/2로 하면 약수 다나옴(시간복잡도 O(N/2))
+// i<N제곱근으로 하면 약수 절반만나옴(시간복잡도 O(루트N)), 뒤 절반을 구해야함(시간복잡도는 줄어들긴하는데 코드 길어짐) << 이걸로 ㄱ
 
-ex) 8번째 의 경우 7번째인 1/4에서 분자와 분모에 1을 더하고 뺀 2/3이다.
+//firstList는 약수를 앞에서부터, secondList는 약수를 뒤에서붙어 만듬
+for (let i = 1; i <= Math.sqrt(N); i++) {
+   if (N % i == 0) {
+      firstList.push(i)
+      secondList.push(parseInt(N / i))
+   }
 
-솔루션
-1. n이 등차수열에서 몇번째 수 다음에 나오는 수 인지 알아낸다
-2-1. n이 등차수열일 때(n==i), 등차수열에서 홀수번 째면 x/1, 짝수번째면 1/x .
-3. 해결한다
-*/
-const n = Number(input)
-let x = 1 // 등차수열의 몇 번째인지 확인
-let i = 1 // x가 나열된 분수에서 몇번재인지 확인
-
-// 1. n이 등차수열에서 몇번째 수 다음에 나오는 수 인지 알아낸다
-while (n > i) {
-   i += x
-   x++
-}
-
-//2-1. n이 등차수열일 때(n==i), 등차수열에서 홀수번 째면 x/1, 짝수번째면 1/x .
-if (n == i) {
-   x % 2 == 0 ? console.log(`1/${x}`) : console.log(`${x}/1`)
-} else {
-   //2-2. n이 등차수열이 아닐 때(n<i), 분자+분모=x
-   // n-(i-(x-1)) 는 n이 이전 등차수열에서 몇칸 떨어져 있나를 나타냄
-   const distance = n - (i - (x - 1))
-   if (x % 2 == 0) {
-      //x가 짝수일때, n이 이전 등차수열에서 떨어져 있는 칸수만큼  분자는 x-1에서 줄어들고 분모는 1에서 늘어난다.
-      console.log(`${x - 1 - distance}/${1 + distance}`)
-   } else {
-      //x가 홀수일때, n이 distance만큼 분자는 늘고, 분모는 줄어든다
-      console.log(`${1 + distance}/${x - 1 - distance}`)
+   //일찍 값을 찾으면 걍 결과
+   if (firstList.length == K) {
+      answer = firstList.pop()
+      break
    }
 }
 
-/*
-개선포인트
+//위에서 정답 못찾았다면
+if (!answer) {
+   //소숫점 올림한 수가 원래 수랑 같음 = 정수임 = 원래 N은 제곱수임
+   if (Math.ceil(Math.sqrt(N)) == Math.sqrt(N)) {
+      //제곱수일땐 first와 second에 제곱근이 중복되니 제곱근 제거
+      firstList.pop()
+   }
+   //모든 소수 리스트 result 완성
+   const result = firstList.concat(secondList.reverse())
 
-1. 대각선 단위로 생각하면 쉬움(1번째 대각선은 1/1, 2번째 대각선은 1/2~2/1, ...)
-2. 1의 연장으로 대각선에서 몇번째인지(offset)과 몇 번째 대각선인지(diagonal)를 계산하면 좀더 쉬움 + 변수명 명확함
-
- */
+   answer = result.length < K ? 0 : result[K - 1]
+}
+console.log(answer)
