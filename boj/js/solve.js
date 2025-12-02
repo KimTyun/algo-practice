@@ -1,23 +1,19 @@
-//2581 소수
+//27323 직사각형
 const fs = require('fs')
 const path = require('path')
 const filePath = path.join(__dirname, 'input.txt')
 
-const input = fs.readFileSync(filePath).toString().trim().split('\n').map(Number)
+const input = fs
+   .readFileSync(filePath)
+   .toString()
+   .trim()
+   .split('\n')
+   .map((e) => e.split(' ').map(Number))
 
-const [M, N] = input
-let numberList = [...new Array(N - 1)].map((e, i) => i + 2)
-const primeList = []
+const X = input.map((e) => e[0])
+const Y = input.map((e) => e[1])
 
-while (true) {
-   if (numberList[0] >= M) primeList.push(numberList[0])
-   numberList = numberList.filter((e) => e % numberList[0] != 0)
-   if (numberList.length == 0) break
-}
+const A = X[0] == X[1] ? X[2] : X[0] == X[2] ? X[1] : X[0]
+const B = Y[0] == Y[1] ? Y[2] : Y[0] == Y[2] ? Y[1] : Y[0]
 
-const answer =
-   primeList.length != 0
-      ? `${primeList.reduce((acc, cur) => (acc += cur), 0)}
-${primeList[0]}`
-      : -1
-console.log(answer)
+console.log(`${A} ${B}`)
