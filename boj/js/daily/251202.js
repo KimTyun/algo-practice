@@ -63,3 +63,86 @@ function A_3009() {
 
    console.log(`${A} ${B}`)
 }
+
+// ─────────────────────────────
+//9063 대지
+// ─────────────────────────────
+function A_9603() {
+   const input = fs
+      .readFileSync(filePath)
+      .toString()
+      .trim()
+      .split('\n')
+      .map((e) => e.split(' ').map(Number))
+   const N = input.shift()
+
+   let minX = input[0][0]
+   let maxX = input[0][0]
+   let minY = input[0][1]
+   let maxY = input[0][1]
+
+   for (const i of input) {
+      if (i[0] > maxX) maxX = i[0]
+      if (i[1] > maxY) maxY = i[1]
+
+      if (i[0] < minX) minX = i[0]
+      if (i[1] < minY) minY = i[1]
+   }
+
+   if (N == 1) console.log(0)
+   else console.log((maxX - minX) * (maxY - minY))
+}
+
+// ─────────────────────────────
+//10101 삼각형 외우기
+// ─────────────────────────────
+function A_10101() {
+   const input = fs
+      .readFileSync(filePath)
+      .toString()
+      .trim()
+      .split('\n')
+      .map((e) => e.split(' ').map(Number))
+   input.pop()
+
+   const answer = []
+   for (const i of input) {
+      const [A, B, C] = i
+      if (A == B && A == C) {
+         answer.push('Equilateral')
+         continue
+      }
+
+      const max = Math.max(...i)
+      const sum = i.reduce((acc, cur) => (acc += cur), 0)
+      if (sum - max <= max) {
+         answer.push('Invalid')
+         continue
+      }
+
+      if (A == B || A == C || B == C) {
+         answer.push('Isosceles')
+      } else {
+         answer.push('Scalene')
+      }
+   }
+
+   console.log(answer.join('\n'))
+}
+
+// ─────────────────────────────
+//14125 세 막대
+// ─────────────────────────────
+function A_14125() {
+   const input = fs.readFileSync(filePath).toString().trim().split(' ').map(Number)
+
+   const max = Math.max(...input)
+   const sum = input.reduce((acc, cur) => (acc += cur), 0)
+   const smallSide = sum - max
+
+   if (smallSide <= max) {
+      console.log(smallSide * 2 - 1)
+   } else {
+      console.log(sum)
+   }
+}
