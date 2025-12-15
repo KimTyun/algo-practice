@@ -1,8 +1,7 @@
-//1181 단어정렬
+//10814 나이순 정렬
 const fs = require('fs')
 const path = require('path')
-const filePath = path.join(__dirname, 'input.txt')
-
+const filePath = path.join(__dirname, '../input.txt')
 const input = fs.readFileSync(filePath).toString().trim().split('\r\n')
 input.shift()
 
