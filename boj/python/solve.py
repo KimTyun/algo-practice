@@ -1,22 +1,22 @@
-# 1764 듣보잡
+# 1269 대칭 차집합
 import sys
 sys.stdin = open("input.txt", "r")
 
-N,M = [int(x) for x in sys.stdin.readline().split(' ')]
+N =  int(sys.stdin.readline().rstrip())
 input = [x.rstrip() for x in sys.stdin.readlines()]   
 
-setN= set()
-setM= set()
 
-for index, value in enumerate(input):
-    if((int(index))<N):
-        setN.add(value)
-    else:
-        setM.add(value)
+answer= []
+def getGCD(A,B):
+    r= A%B
+    if(r==0): return B
+    return getGCD(B,r)
 
-answer = setN & setM
 
-result = sorted(answer)
+for i in input:
+    A,B = [int(x) for x in i.split(' ')]
+    GCD=getGCD(A,B)
+    LCM = A*B/GCD
+    answer.append(str(int(LCM)))
 
-print(len(result))
-print('\n'.join(result))
+print('\n'.join(answer))
