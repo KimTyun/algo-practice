@@ -1,25 +1,27 @@
-//13241 최소공배수
-console.time()
+//1929 소수 구하기
 
 const fs = require('fs')
 const path = require('path')
 const filePath = path.join(__dirname, 'input.txt')
 
-const input = fs.readFileSync(filePath).toString().trim().split('\r\n')
+const input = fs.readFileSync(filePath).toString().trim().split(' ').map(Number)
 
-const [A, B] = input[0].split(' ').map(Number)
-const [C, D] = input[1].split(' ').map(Number)
+const [A, B] = input
 
-let a = B > D ? B : D
-let b = a == B ? D : B
-while (b) {
-   r = a % b
-   a = b
-   b = r
+const isPrime = new Array(B + 1).fill(1)
+isPrime[0] = 0
+isPrime[1] = 0
+for (let i = 1; i * i <= B; i++) {
+   if (!isPrime[i]) continue
+   for (let j = i * i; j <= B; j += i) {
+      isPrime[j] = 0
+      console.log('?')
+   }
 }
 
-const gcd = (B * D) / a
-const sum = A * (gcd / B) + C * (gcd / D)
+const answer = []
+for (let i = A; i <= B; i++) {
+   if (isPrime[i]) answer.push(i)
+}
 
-console.log(sum, gcd)
-console.timeEnd()
+console.log(answer)
