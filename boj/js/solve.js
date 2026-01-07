@@ -1,81 +1,46 @@
-// 18258 큐2
+//11866번 요세푸스 문제 0
 
 const fs = require('fs')
 const path = require('path')
 const filePath = path.join(__dirname, 'input.txt')
 
-const input = fs.readFileSync(filePath).toString().trim().split('\r\n')
+const input = fs.readFileSync(filePath).toString().trim()
 
-class Queue {
-   constructor(iterable = null, ...arg) {
-      this.queue = {}
-      this.front = 0
-      this.rear = -1
-      if (iterable != null && typeof iterable[Symbol.iterator] === 'function' && typeof iterable !== String) {
-         for (const v of iterable) {
-            this.rear++
-            this.queue[this.rear] = v
-         }
-      } else {
-         if (iterable === null) return
+const [N, K] = input.split(' ').map(Number)
+
+const list = Array.from(new Array(N), (x, i) => i + 1)
+
+class CircularList {
+   queue = {}
+   front = 1
+   rear = 0
+   pointer = 1
+   constructor(list) {
+      for (let l of list) {
          this.rear++
-         this.queue[this.rear] = iterable
+         this.queue[this.rear] = { value: l, next: this.rear + 1, before: this.rear - 1 }
       }
-      if (arg) {
-         for (const v of arg) {
-            this.rear++
-            this.queue[this.rear] = v
-         }
-      }
+      this.queue[this.rear] = { ...this.queue[this.rear], next: this.front }
+      this.queue[1] = { ...this.queue[1], before: this.rear }
    }
-   push(x) {
-      this.rear++
-      this.queue[this.rear] = x
-   }
-   pop() {
-      const data = this.queue[this.front]
-      if (data === undefined) {
-         this.front = 0
-         this.rear = -1
-         return -1
+   move(K) {
+      let data
+      for (let i = 0; i < K; i++) {
+         data = this.queue[this.pointer]
+         this.pointer = data.next
       }
-      delete this.queue[this.front]
-      this.front++
+      const { value, next, before } = data
 
-      return data
-   }
-   getSize() {
-      return this.rear - this.front + 1
-   }
-   isEmpty() {
-      if (this.getSize() === 0) return 1
-      else return 0
-   }
-   getFront() {
-      return this.queue[this.front] ?? -1
-   }
-   getBack() {
-      return this.queue[this.rear] ?? -1
+      this.queue[before] = { ...this.queue[before], next }
+      this.queue[next] = { ...this.queue[next], before }
+      return value
    }
 }
 
-const queue = new Queue()
+const queue = new CircularList(list)
 const answer = []
-for (let i = 1; i <= Number(input[0]); i++) {
-   const [order, data] = input[i].split(' ')
-   if (order === 'push') {
-      queue.push(data)
-   } else if (order === 'pop') {
-      answer.push(queue.pop())
-   } else if (order === 'size') {
-      answer.push(queue.getSize())
-   } else if (order === 'empty') {
-      answer.push(queue.isEmpty())
-   } else if (order === 'front') {
-      answer.push(queue.getFront())
-   } else if (order === 'back') {
-      answer.push(queue.getBack())
-   }
-}
 
-console.log(answer.join('\n'))
+while (answer.length !== N) {
+   answer.push(queue.move(K))
+}
+console.log(`<${answer.join(', ')}>`)
