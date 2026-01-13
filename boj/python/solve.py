@@ -1,22 +1,20 @@
-# 1269 대칭 차집합
+#24511 queuestack 
 import sys
+import math
 sys.stdin = open("input.txt", "r")
 
-N =  int(sys.stdin.readline().rstrip())
-input = [x.rstrip() for x in sys.stdin.readlines()]   
+N = int(sys.stdin.readline())
+testCase = [list(map(int,x.split(' '))) for x in sys.stdin.readlines()]
 
 
-answer= []
-def getGCD(A,B):
-    r= A%B
-    if(r==0): return B
-    return getGCD(B,r)
+#nCk = n!/(n-k)!k!
+def nCk(N,K):
+    return math.factorial(N)//(math.factorial(N-K)*math.factorial(K)) 
+
+answer = []
+for tc in testCase:
+    N,M = tc
+    answer.append(nCk(M,N))
 
 
-for i in input:
-    A,B = [int(x) for x in i.split(' ')]
-    GCD=getGCD(A,B)
-    LCM = A*B/GCD
-    answer.append(str(int(LCM)))
-
-print('\n'.join(answer))
+print('\n'.join(list(map(str,answer))))

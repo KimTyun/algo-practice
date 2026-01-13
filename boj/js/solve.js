@@ -1,4 +1,4 @@
-//28729 덱2
+//20920 영단어 암기는 어려워
 
 const fs = require('fs')
 const path = require('path')
@@ -6,96 +6,24 @@ const filePath = path.join(__dirname, 'input.txt')
 
 const input = fs.readFileSync(filePath).toString().trim()
 
-const data = input.split('\r\n')
-const N = Number(data[0])
+/*제출용
+const input = require('fs').readFileSync(0).toString().trim()
+*/
 
-class Deque {
-   deque = {}
-   rear = -1
-   front = 0
-   length = 0
-
-   #setLength() {
-      this.length = this.rear - this.front + 1
-   }
-   getLength() {
-      this.#setLength()
-      return this.length
-   }
-
-   append(data) {
-      this.rear++
-      this.length++
-      this.deque[this.rear] = data
-   }
-   pop() {
-      const data = this.deque[this.rear]
-      if (data) {
-         delete this.deque[this.rear]
-         this.rear--
-         this.length--
-      }
-      return data ?? -1
-   }
-   appendleft(data) {
-      this.front--
-      this.length++
-      this.deque[this.front] = data
-   }
-   popleft() {
-      const data = this.deque[this.front]
-      if (data) {
-         delete this.deque[this.front]
-         this.front++
-         this.length--
-      }
-      return data ?? -1
-   }
-
-   getSide() {
-      return [this.deque[this.front] ?? -1, this.deque[this.rear] ?? -1]
-   }
-
-   isEmpty() {
-      return this.length === 0 ? 1 : 0
-   }
-
-   constructor() {}
-}
-
-const deque = new Deque()
-const answer = []
-for (let i = 1; i <= N; i++) {
-   const [order, x] = data[i].split(' ').map(Number)
-   switch (order) {
-      case 1:
-         deque.appendleft(x)
-         break
-      case 2:
-         deque.append(x)
-         break
-      case 3:
-         answer.push(deque.popleft())
-         break
-      case 4:
-         answer.push(deque.pop())
-         break
-      case 5:
-         answer.push(deque.getLength())
-         break
-      case 6:
-         answer.push(deque.isEmpty())
-         break
-      case 7:
-         answer.push(deque.getSide()[0])
-         break
-      case 8:
-         answer.push(deque.getSide()[1])
-         break
-
-      default:
-         break
+const [NM, ...data] = input.split('\n')
+const [N, M] = NM.split(' ').map(Number)
+words = data.filter((e) => e.length >= M)
+words.sort()
+wordCount = []
+let curFreq = 1
+for (let i = 0; i < words.length; i++) {
+   if (words[i] === words[i + 1]) {
+      curFreq++
+   } else {
+      wordCount.push([words[i], curFreq])
+      curFreq = 1
    }
 }
+wordCount.sort((a, b) => b[1] - a[1] || b[0].length - a[0].length)
 
-console.log(answer.join('\n'))
+// console.log(wordCount.map((e) => e[0]).join('\n'))
