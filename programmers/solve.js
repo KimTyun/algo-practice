@@ -28,6 +28,9 @@ function solution(arr) {
       }
    }
 
+   // 1.스택을 준비한다
+   // 2.연결된 하위 노드들을 스택에 넣는다
+   // 3.스택에서 꺼내서 체크
    function DFS([x, y]) {
       const stack = []
       let count = 0
