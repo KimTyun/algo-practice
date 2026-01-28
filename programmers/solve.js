@@ -3,63 +3,43 @@ path = require('path')
 filePath = path.join(__dirname, 'input.txt')
 input = fs.readFileSync(filePath).toString().trim()
 
-const arr = JSON.parse(input)
+const cards = JSON.parse(input)
 
 //프로그래머스에서는 solution(data)를 통해 제출해야함
-function solution(arr) {
-   const matrix = arr.map((e) => [...e])
+function solution(cards) {
+   // 루프가 가장 큰 2개를 구하는 문제
 
-   //dfs bfs
-   //1 체크용 arr 만들기
-   //2.체크 안된 칸부터 검사, 우선 x가 아닌 칸이 나올떄까지 ㄱ
-   //3. 숫자칸이 나왔으면 bfs/dfs를 돌려서 덩어리를 찾아냄.
-   //4. 덩어리 다찾았으면 다시 체크안된 칸을 찾음
-   //5. 모든 칸을 체크했으면 덩어리 중 숫자가 가장 큰 값이 정답
-   let answer = []
-
-   //1
-   const visited = Array.from({ length: matrix.length }, () => Array(matrix[0].length).fill(false))
-
-   for (const x in matrix) {
-      for (const y in matrix[x]) {
-         if (visited[x][y]) continue
-         const island = DFS([Number(x), Number(y)])
-         if (island != -1) answer.push(island)
-      }
-   }
-
-   // 1.스택을 준비한다
-   // 2.연결된 하위 노드들을 스택에 넣는다
-   // 3.스택에서 꺼내서 체크
-   function DFS([x, y]) {
-      const stack = []
+   function checkLoof(start) {
       let count = 0
-      stack.push([x, y])
-      while (stack.length) {
-         let [vX, vY] = stack.pop()
-         if (visited[vX][vY]) continue
-         visited[vX][vY] = true
-         if (matrix[vX][vY] === 'X') continue
-         count += Number(matrix[vX][vY])
-
-         const check = [
-            [vX, vY + 1],
-            [vX + 1, vY],
-            [vX, vY - 1],
-            [vX - 1, vY],
-         ]
-         for (let node of check) {
-            const [nX, nY] = node
-            if (visited[nX]?.[nY] === false) {
-               stack.push([nX, nY])
-            }
-         }
-      }
-      return count === 0 ? -1 : count
+      let pointer = start
+      do {
+         isChecked[pointer - 1] = true
+         count++
+         pointer = cards[pointer - 1]
+      } while (start !== pointer)
+      return count
    }
 
-   if (answer.length === 0) return [-1]
-   else return answer.sort((a, b) => a - b)
+   const isChecked = Array.from(new Array(cards.length)).map((_) => false)
+   const roof = []
+   for (const i in isChecked) {
+      if (isChecked[i]) continue
+      roof.push(checkLoof(Number(i) + 1))
+   }
+   let answer = 0
+
+   let big1 = 0
+   let big2 = 0
+
+   for (const r of roof) {
+      if (r > big1) {
+         big2 = big1
+         big1 = r
+      } else if (r > big2) big2 = r
+   }
+
+   answer = big1 * big2
+   return answer
 }
 
-solution(arr)
+console.log(solution(cards))
