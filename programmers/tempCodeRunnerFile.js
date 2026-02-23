@@ -1,1 +1,1 @@
-solution(cards)
+solution(n, words)
