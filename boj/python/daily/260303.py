@@ -2,7 +2,7 @@
 import sys
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.stdin = open(os.path.join(BASE_DIR, "input.txt"), "r")
+sys.stdin = open(os.path.join(BASE_DIR, "../input.txt"), "r")
 
 N= int(sys.stdin.readline())
 

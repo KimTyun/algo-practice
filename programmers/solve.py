@@ -2,53 +2,39 @@ import sys
 import os
 import ast
 
-if os.path.exists("input.txt"):
-    sys.stdin = open("input.txt", "r")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.stdin = open(os.path.join(BASE_DIR, "input.txt"), "r")
 
-edges = ast.literal_eval(sys.stdin.readline().strip())
+nodeinfo = ast.literal_eval(sys.stdin.readline().strip())
 
+
+#길찾기 게임
+
+# 1. 같은 레벨의 노트끼리 묶기.
+# 2. 최상단 노드부터 연결 그래프를 그리기
+# 3. 만들어진 연결 그래프로 정답 도출하기
 from collections import defaultdict
-import copy
-def solution(n,wires):
-    answer = -1
-
-    graph=defaultdict(list)
-    for a,b in wires:
-        graph[a].append(b)
-        graph[b].append(a) 
-
-    for a,b in wires:
-        newGraph = copy.deepcopy(graph)
-        newGraph[a].remove(b)
-        newGraph[b].remove(a)
+def solution(nodeinfo):
+    answer = [[]]
+    # 1.
+    tempDict = defaultdict(list)
+    tempList = [False for x in range(len(nodeinfo)+1)]
+    for index,node in enumerate(nodeinfo):
+        tempDict[node[1]].append([node[0],index+1])
+        if not tempList[node[1]]:
+            tempList[node[1]] = True
+    #2. 
+    level = 0
+    treeDict = defaultdict(list)
+    while(len(tempList)):
+        if not tempList.pop(): 
+            continue
+        level+=1
+        if level==1:
+            treeDict[level].append([tempDict[len(tempList)]])
         
-        result = dfs(n,newGraph)
-        if answer == -1 or result<answer:
-            answer= result
-        
-    
-    
-    
     return answer
 
-def dfs(N,graph):
-    stack = []
-    stack.append(1)
-    count = 0
-    checked = [False for x in range(N+1)]
-    while len(stack)!=0:
-        node = stack.pop()
-        count+=1
-        checked[node]=True
 
-        for n in graph[node]:
-            if checked[n]:
-                continue
-            stack.append(n)
-
-    return abs(count-(N-count))
-
-
-
-print(solution(4,edges))
+solution(nodeinfo)
 

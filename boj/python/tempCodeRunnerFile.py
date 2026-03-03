@@ -1,1 +1,1 @@
-answer
+sys.stdin.readline()
