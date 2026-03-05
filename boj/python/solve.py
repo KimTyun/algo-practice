@@ -1,4 +1,4 @@
-#14889 스타트와 링크
+#24416 알고리즘 수업 -피보나치 수1
 import sys
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -6,48 +6,14 @@ sys.stdin = open(os.path.join(BASE_DIR, "input.txt"), "r")
 
 N= int(sys.stdin.readline())
 
-grid = [[int(y) for y in x.rstrip().split()] for x in sys.stdin.readlines()]
-
-from collections import deque
-def makeTeam(N):
-    team = deque()
-    temp = []
-    
-    M= N//2
-    def recursion():
-        if len(temp) == M:
-            team.append(temp[:])
-            return
-        
-        start = (temp[-1]+1) if temp else 0
-        for i in range(start,N):
-            temp.append(i)
-            recursion()
-            temp.pop()
+def fibonacci(n):
+    f = list(range(n+1))
+    f[1] = 1
+    f[2] = 1
+    for i in range(3,n+1):
+        f[i] = f[i-1]+f[i-2]
+    return f[n]
 
 
-    recursion()
-    return team
 
-teamList = makeTeam(N)
-
-def powerCheck(team):
-    result = 0
-    for i in team:
-        for j in team:
-             result += grid[i][j]
-            
-            
-    return result
-
-answer = float('inf')
-for _ in range(len(teamList)//2):
-    스타크 = teamList.popleft()
-    링크 = teamList.pop()
-    balance = abs(powerCheck(스타크)-powerCheck(링크))
-    if balance < answer:
-        answer=balance
-    if answer ==0:
-        break
-
-print(answer)
+print(fibonacci(N), N-2 if N>=3 else 1)
