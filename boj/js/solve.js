@@ -1,4 +1,4 @@
-//1904 01타일
+//1932 정수 삼각형
 
 const fs = require('fs')
 const path = require('path')
@@ -9,24 +9,21 @@ const input = fs.readFileSync(filePath).toString().trim()
 /*제출용
    const input = require('fs').readFileSync(0).toString().trim()
    */
-// ;(1, 1, 1, 2, 2, 3, 4, 5, 7, 9)
-// 1,2,3번째는 고정, 4번째부터 n-3+n-2규칙
-// 여러개 테스트케이스를 제출해야하니 dp에 저장해두고 이전값 재활용
 
-const T = input.split('\r\n').map(Number)
+const triangle = input.split('\n').map((e) => e.split(' ').map(Number))
+const N = triangle[0]
 
-const dp = [0, 1, 1, 1]
-answer = ''
-for (let i = 1; i < T.length; i++) {
-   t = T[i]
-   if (dp[t]) {
-      answer += `${dp[t]}\n`
-   } else {
-      for (let j = dp.length; j <= t; j++) {
-         dp[j] = dp[j - 3] + dp[j - 2]
-      }
-      answer += `${dp[t]}\n`
+//맨 아래서부터 2개씩 묶어서 큰수만 남김(4 5 2 6 5 면 45-5, 52-5, 26-6, 65-5)
+//그 다음 층이랑 더함(그 다음층이 2 7 4 4 면 7 12 10 9)
+//더한 층을 다시 2개씩 묶어서 큰수만 남김 (7 12- 12, 12 10-12, 10-9-10)
+//반복
+
+for (let i = N; i > 0; i--) {
+   const floor = triangle[i]
+   for (let j = 0; j < floor.length - 1; j++) {
+      if (floor[j] >= floor[j + 1]) triangle[i - 1][j] += floor[j]
+      else triangle[i - 1][j] += floor[j + 1]
    }
 }
-result = answer.replace(/\n$/, '')
-console.log(result)
+
+console.log(triangle[1][0])
